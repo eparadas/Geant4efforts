@@ -76,10 +76,11 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(new PoCDetectorConstruction());
 
   // Physics list
+  // Not sure what the QBBC stands for
   // G4VModularPhysicsList* physicsList = new QBBC;
   // physicsList->SetVerboseLevel(1);
   // runManager->SetUserInitialization(physicsList);
-  // PoCPhysicsList *physicsList = new PoCPhysicsList();
+  
   runManager->SetUserInitialization(new PoCPhysicsList);
 
   // User action initialization

@@ -41,6 +41,8 @@
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4OpticalSurface.hh"
+#include "G4LogicalSkinSurface.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -200,15 +202,40 @@ G4VPhysicalVolume* PoCDetectorConstruction::Construct()
                     0,                       //copy number
                     checkOverlaps);
 
-  new G4PVPlacement(0,                       //no rotation
-                    BafflePosition,                    //at position
-                    BaffleLogicalVolume,             //its logical volume
-                    "Baffle_place",                //its name
-                    logicEnv,                //its mother  volume
-                    false,                   //no boolean operation
-                    0,                       //copy number
-                    checkOverlaps);
-  //     
+
+//another miror:
+
+G4OpticalSurface* OpSurface = new G4OpticalSurface("name");
+
+
+
+OpSurface -> SetType(dielectric_metal);
+OpSurface -> SetFinish(ground);
+OpSurface -> SetModel(glisur);
+const G4int NUM = 1;
+G4double polish = 0.8;
+
+G4double pp[NUM] = {100*eV};
+G4double reflectivity[NUM] = {0.9};
+G4double efficiency[NUM] = {0.8};
+G4MaterialPropertiesTable* OpSurfaceProperty = new G4MaterialPropertiesTable();
+
+OpSurfaceProperty -> AddProperty("REFLECTIVITY",pp,reflectivity,NUM);
+OpSurfaceProperty -> AddProperty("EFFICIENCY",pp,efficiency,NUM);
+
+OpSurface -> SetMaterialPropertiesTable(OpSurfaceProperty);
+
+new G4PVPlacement(0,                       //no rotation
+                  BafflePosition,                    //at position
+                  BaffleLogicalVolume,             //its logical volume
+                  "Baffle_place",                //its name
+                  logicEnv,                //its mother  volume
+                  false,                   //no boolean operation
+                  0,                       //copy number
+                  checkOverlaps);
+new
+  G4LogicalSkinSurface("name",BaffleLogicalVolume,OpSurface);
+
   // Shape which will be the wafer
   //
   G4Material* WaferMaterial = nist->FindOrBuildMaterial("G4_Si");

@@ -92,7 +92,7 @@ void PoCPhysicsList::ConstructEM()
 	//  Get pointer to gamma
 	G4ParticleDefinition *particle = G4Gamma::GammaDefinition();
 	// Construct and register processes for gamma
-	// ph->RegisterProcess(new G4PhotoElectricEffect(), particle);
+	ph->RegisterProcess(new G4PhotoElectricEffect(), particle);
 	ph->RegisterProcess(new G4ComptonScattering(), particle);
 	ph->RegisterProcess(new G4GammaConversion(), particle);
 	// ph->RegisterProcess(new G4RayleighScattering(), particle);
